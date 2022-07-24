@@ -1,8 +1,13 @@
-import { log } from './service/util'
+import express from "express"
+const app = express();
+const port = 3000; // default port to listen
 
-export function hello(who: string) {
-  log('this is a message')
-  //`Hello ${who}! `;
-}
+// define a route handler for the default home page
+app.get( "/", ( req, res ) => {
+    res.send( "Hello world!" );
+} );
 
-hello('pavan')
+// start the Express server
+app.listen( port, () => {
+    console.log( `server started at http://localhost:${ port }` );
+} );

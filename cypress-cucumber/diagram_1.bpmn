@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0pedlv5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.1.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_test_approval_2" name="test_approval_2" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_1owdrkl</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:endEvent id="Event_0z9wt5t">
+      <bpmn:incoming>Flow_1ffsj9h</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:intermediateCatchEvent id="approve_api" name="approve_api">
+      <bpmn:incoming>Flow_1owdrkl</bpmn:incoming>
+      <bpmn:outgoing>Flow_0qzgj1e</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1uk45tp" messageRef="Message_0n1vib2" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:exclusiveGateway id="Gateway_1n0h6ud">
+      <bpmn:incoming>Flow_0qzgj1e</bpmn:incoming>
+      <bpmn:outgoing>Flow_1ffsj9h</bpmn:outgoing>
+      <bpmn:outgoing>Flow_1i5y6ba</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sequenceFlow id="Flow_1owdrkl" sourceRef="StartEvent_1" targetRef="approve_api" />
+    <bpmn:sequenceFlow id="Flow_0qzgj1e" sourceRef="approve_api" targetRef="Gateway_1n0h6ud" />
+    <bpmn:sequenceFlow id="Flow_1ffsj9h" sourceRef="Gateway_1n0h6ud" targetRef="Event_0z9wt5t">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{status == "approve"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_1i5y6ba" sourceRef="Gateway_1n0h6ud" targetRef="Event_0zy78r2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{status == "reject"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_0zy78r2">
+      <bpmn:incoming>Flow_1i5y6ba</bpmn:incoming>
+      <bpmn:errorEventDefinition id="ErrorEventDefinition_1mz612h" errorRef="Error_08z3p3v" />
+    </bpmn:endEvent>
+  </bpmn:process>
+  <bpmn:message id="Message_0n1vib2" name="Message_Approve" />
+  <bpmn:error id="Error_08z3p3v" name="Error_1iqgpvk" errorCode="1" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_test_approval_2">
+      <bpmndi:BPMNEdge id="Flow_1owdrkl_di" bpmnElement="Flow_1owdrkl">
+        <di:waypoint x="188" y="200" />
+        <di:waypoint x="282" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0qzgj1e_di" bpmnElement="Flow_0qzgj1e">
+        <di:waypoint x="318" y="200" />
+        <di:waypoint x="405" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1ffsj9h_di" bpmnElement="Flow_1ffsj9h">
+        <di:waypoint x="455" y="200" />
+        <di:waypoint x="552" y="200" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1i5y6ba_di" bpmnElement="Flow_1i5y6ba">
+        <di:waypoint x="430" y="175" />
+        <di:waypoint x="430" y="100" />
+        <di:waypoint x="522" y="100" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_1n0h6ud_di" bpmnElement="Gateway_1n0h6ud" isMarkerVisible="true">
+        <dc:Bounds x="405" y="175" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1bb17oe_di" bpmnElement="approve_api">
+        <dc:Bounds x="282" y="182" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="271" y="225" width="61" height="14" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0z9wt5t_di" bpmnElement="Event_0z9wt5t">
+        <dc:Bounds x="552" y="182" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_14rtd6q_di" bpmnElement="Event_0zy78r2">
+        <dc:Bounds x="522" y="82" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

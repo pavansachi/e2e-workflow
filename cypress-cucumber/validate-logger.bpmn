@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0l45359" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.1.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="validate-logger" name="validate-logger" isExecutable="true">
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>Flow_11ilqee</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:intermediateCatchEvent id="Event_1fou2w2">
+      <bpmn:incoming>Flow_19k5byf</bpmn:incoming>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1nfxskp" messageRef="Message_0oknp6l" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_11ilqee" sourceRef="StartEvent_1" targetRef="Activity_13vx55e" />
+    <bpmn:sequenceFlow id="Flow_19k5byf" sourceRef="Activity_13vx55e" targetRef="Event_1fou2w2" />
+    <bpmn:scriptTask id="Activity_13vx55e" name="validate" scriptFormat="js">
+      <bpmn:incoming>Flow_11ilqee</bpmn:incoming>
+      <bpmn:outgoing>Flow_19k5byf</bpmn:outgoing>
+      <bpmn:script>console.log("validate")</bpmn:script>
+    </bpmn:scriptTask>
+  </bpmn:process>
+  <bpmn:message id="Message_0oknp6l" name="validate-complete" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="validate-logger">
+      <bpmndi:BPMNEdge id="Flow_11ilqee_di" bpmnElement="Flow_11ilqee">
+        <di:waypoint x="188" y="117" />
+        <di:waypoint x="250" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19k5byf_di" bpmnElement="Flow_19k5byf">
+        <di:waypoint x="350" y="117" />
+        <di:waypoint x="402" y="117" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="152" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0fyd9eh_di" bpmnElement="Event_1fou2w2">
+        <dc:Bounds x="402" y="99" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1hhdfvo_di" bpmnElement="Activity_13vx55e">
+        <dc:Bounds x="250" y="77" width="100" height="80" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

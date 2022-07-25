@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_0pedlv5" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.1.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:message id="Message_0n1vib2" name="Message_Approve3" />
+  <bpmn:error id="Error_08z3p3v" name="Error_1iqgpvk" errorCode="1" />
+  <bpmn:process id="make-payment" name="make-payment" isExecutable="true">
+    <bpmn:scriptTask id="Activity_085bvze" name="get-account" scriptFormat="js">
+      <bpmn:incoming>Flow_0ddkseh</bpmn:incoming>
+      <bpmn:outgoing>Flow_11qejwq</bpmn:outgoing>
+      <bpmn:script>console.log("get account")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:intermediateCatchEvent id="Event_09ug264">
+      <bpmn:incoming>Flow_11qejwq</bpmn:incoming>
+      <bpmn:outgoing>Flow_1vi37mk</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_1wfmn4v" messageRef="Message_2l58jpf" />
+    </bpmn:intermediateCatchEvent>
+    <bpmn:sequenceFlow id="Flow_11qejwq" sourceRef="Activity_085bvze" targetRef="Event_09ug264" />
+    <bpmn:startEvent id="Event_0uw61f5">
+      <bpmn:outgoing>Flow_0ddkseh</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:sequenceFlow id="Flow_0ddkseh" sourceRef="Event_0uw61f5" targetRef="Activity_085bvze" />
+    <bpmn:startEvent id="Event_026spmv">
+      <bpmn:outgoing>Flow_19aatlb</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="MessageEventDefinition_04m6lx3" messageRef="Message_2617b2c" />
+    </bpmn:startEvent>
+    <bpmn:scriptTask id="Activity_0bwrzux" name="slack" scriptFormat="js">
+      <bpmn:incoming>Flow_19aatlb</bpmn:incoming>
+      <bpmn:outgoing>Flow_1cgm2zv</bpmn:outgoing>
+      <bpmn:script>console.log("slack")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_19aatlb" sourceRef="Event_026spmv" targetRef="Activity_0bwrzux" />
+    <bpmn:endEvent id="Event_0bx3pjb">
+      <bpmn:incoming>Flow_1cgm2zv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1cgm2zv" sourceRef="Activity_0bwrzux" targetRef="Event_0bx3pjb" />
+    <bpmn:exclusiveGateway id="Gateway_0ddni8y">
+      <bpmn:incoming>Flow_1vi37mk</bpmn:incoming>
+      <bpmn:outgoing>Flow_01guqkm</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0fqbk77</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:scriptTask id="Activity_0tqrde2" name="approved" scriptFormat="js">
+      <bpmn:incoming>Flow_01guqkm</bpmn:incoming>
+      <bpmn:outgoing>Flow_1p79qmq</bpmn:outgoing>
+      <bpmn:script>console.log("approve")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:scriptTask id="Activity_0af2t55" name="reject" scriptFormat="js">
+      <bpmn:incoming>Flow_0fqbk77</bpmn:incoming>
+      <bpmn:outgoing>Flow_0lalycu</bpmn:outgoing>
+      <bpmn:script>console.log("reject")</bpmn:script>
+    </bpmn:scriptTask>
+    <bpmn:sequenceFlow id="Flow_01guqkm" sourceRef="Gateway_0ddni8y" targetRef="Activity_0tqrde2">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{status == "A"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="Flow_0fqbk77" sourceRef="Gateway_0ddni8y" targetRef="Activity_0af2t55">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">#{status == "R"}</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:endEvent id="Event_0hsv6cs">
+      <bpmn:incoming>Flow_0lalycu</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_0lalycu" sourceRef="Activity_0af2t55" targetRef="Event_0hsv6cs" />
+    <bpmn:endEvent id="Event_1wa1w34">
+      <bpmn:incoming>Flow_1p79qmq</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_1p79qmq" sourceRef="Activity_0tqrde2" targetRef="Event_1wa1w34" />
+    <bpmn:sequenceFlow id="Flow_1vi37mk" sourceRef="Event_09ug264" targetRef="Gateway_0ddni8y" />
+  </bpmn:process>
+  <bpmn:message id="Message_2l58jpf" name="Message_1" />
+  <bpmn:message id="Message_21agrq2" name="Message_2" />
+  <bpmn:message id="Message_2rkmkg0" name="Message_3" />
+  <bpmn:message id="Message_2617b2c" name="slack_approved" />
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="make-payment">
+      <bpmndi:BPMNEdge id="Flow_11qejwq_di" bpmnElement="Flow_11qejwq">
+        <di:waypoint x="320" y="300" />
+        <di:waypoint x="320" y="322" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0ddkseh_di" bpmnElement="Flow_0ddkseh">
+        <di:waypoint x="208" y="260" />
+        <di:waypoint x="270" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_19aatlb_di" bpmnElement="Flow_19aatlb">
+        <di:waypoint x="278" y="120" />
+        <di:waypoint x="350" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1cgm2zv_di" bpmnElement="Flow_1cgm2zv">
+        <di:waypoint x="450" y="120" />
+        <di:waypoint x="522" y="120" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_01guqkm_di" bpmnElement="Flow_01guqkm">
+        <di:waypoint x="925" y="260" />
+        <di:waypoint x="980" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0fqbk77_di" bpmnElement="Flow_0fqbk77">
+        <di:waypoint x="900" y="235" />
+        <di:waypoint x="900" y="110" />
+        <di:waypoint x="980" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0lalycu_di" bpmnElement="Flow_0lalycu">
+        <di:waypoint x="1080" y="110" />
+        <di:waypoint x="1142" y="110" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1p79qmq_di" bpmnElement="Flow_1p79qmq">
+        <di:waypoint x="1080" y="260" />
+        <di:waypoint x="1142" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_1vi37mk_di" bpmnElement="Flow_1vi37mk">
+        <di:waypoint x="338" y="340" />
+        <di:waypoint x="900" y="340" />
+        <di:waypoint x="900" y="285" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="BPMNShape_03vawot" bpmnElement="Activity_085bvze">
+        <dc:Bounds x="270" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0uw61f5_di" bpmnElement="Event_0uw61f5">
+        <dc:Bounds x="172" y="242" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_155lttx" bpmnElement="Event_09ug264">
+        <dc:Bounds x="302" y="322" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0z4zka4_di" bpmnElement="Event_026spmv">
+        <dc:Bounds x="242" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_11u6wcn" bpmnElement="Activity_0bwrzux">
+        <dc:Bounds x="350" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0bx3pjb_di" bpmnElement="Event_0bx3pjb">
+        <dc:Bounds x="522" y="102" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Gateway_0ddni8y_di" bpmnElement="Gateway_0ddni8y" isMarkerVisible="true">
+        <dc:Bounds x="875" y="235" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_0gzoqzm" bpmnElement="Activity_0tqrde2">
+        <dc:Bounds x="980" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="BPMNShape_1i1pozc" bpmnElement="Activity_0af2t55">
+        <dc:Bounds x="980" y="70" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_0hsv6cs_di" bpmnElement="Event_0hsv6cs">
+        <dc:Bounds x="1142" y="92" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Event_1wa1w34_di" bpmnElement="Event_1wa1w34">
+        <dc:Bounds x="1142" y="242" width="36" height="36" />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

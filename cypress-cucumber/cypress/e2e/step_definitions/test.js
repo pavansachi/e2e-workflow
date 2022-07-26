@@ -18,6 +18,6 @@ Given("A user opens a test website", () => {
 
 Then("the header x-trace-token is added", () => {
   cy.wait('@headers')
-  .its('request.headers')
-  .should('have.property', 'x-trace-token', '123')
+    .its('request.headers')
+    .should('have.property', 'x-trace-token', '123')
 })

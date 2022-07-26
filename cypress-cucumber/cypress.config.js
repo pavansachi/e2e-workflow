@@ -30,7 +30,7 @@ module.exports = defineConfig({
       return config;
     },
     specPattern: "cypress/e2e/features/*.feature",
-    baseUrl: "http://localhost:8000",
+    baseUrl: "https://localhost:18000",
     chromeWebSecurity: false,
   },
 });

@@ -4,29 +4,94 @@ import {
   And,
   Then,
 } from "@badeball/cypress-cucumber-preprocessor";
+import { aliasQuery } from '../../utils/graphql-test-utils'
 
-Given("the user visits billing.siteminder.com", (account , invoice) => {
+beforeEach(() => {
+  cy.intercept('POST', '/api/graphql', (req) => {
+    aliasQuery(req, 'getAccount')
+    aliasQuery(req, 'getHostedPaymentPages')
+    aliasQuery(req, 'getBillingDocuments')
+  })
+})
 
-  cy.intercept('POST', '/api/authenticate', (req) => {
-    req.headers['x-sm-trace-token'] = '123'
-  }).as('headers')
+Given("the user visits billing", (dataTable) => {
 
-  // cy.intercept('/data/animals.json', { fixture: 'animals.json' })
+  const rows = dataTable.rows()
 
-  // cy.request('POST',
-  //  'http://localhost:8080/engine-rest/process-definition/key/Process_Midas_Payment/start',
-  //  {
-  //   businessKey : "123"
-  // })
+  const accountNumber = rows[0][0]
+  const invoiceNumber = rows[0][1]
 
-  cy.visit("/en/payment/A00085433/INV02816962");
+  cy.wrap(accountNumber).as("accountNumber")
+  cy.wrap(invoiceNumber).as("invoiceNumber")
 
+  cy.visit(`/en/payment/${accountNumber}/${invoiceNumber}`);
+
+  cy.request('POST',
+   'http://localhost:8080/engine-rest/process-definition/key/Process_Midas_Payment/start',
+   {
+    businessKey : "123"
+  }).then((response) => {
+    cy.wrap(response.body.id).as("processId")
+  })
+
+  cy.intercept('POST', '/api/authenticate').as('authenticate')
+
+  cy.get('@authenticate').then(() => {
+    cy.get('@processId').then(processId => {
+      cy.request('POST',
+        'http://localhost:8080/engine-rest/message',
+        {
+          processInstanceId: processId,
+          messageName: "Message_Authenticate",
+          businessKey: "123"
+        })
+    })
+  })
+
+  cy.get('@processId').then(data => {
+    console.log('process id', data)
+  })
+
+  
 });
 
-Then("the header x-trace-token is added", () => {
-  
-  //expect(1).equal(1)
-  cy.wait('@headers')
-  .its('request.headers')
-  .should('have.property', 'x-sm-trace-token', '123')
+And("should display invoices {string}", (invoiceNumber) => {
+
+  cy.get('.billing-document__number', { timeout: 30000 }).first().contains(invoiceNumber)
+
+  cy.wait('@gqlgetAccountQuery', { timeout: 30000 }).then((interception) => {
+    assert.isNotNull(interception.response.body, 'getAccount response is not null')
+    //send camunda message
+  })
+
+})
+
+When("the user selects the invoice {string}", (invoiceNumber) => {
+
+  expect(1).equals(1)
+
+})
+
+And("selects update auto payment and credit card", () => {
+
+  expect(1).equals(1)
+
+})
+
+Then("the hosted payment page is loaded", () => {
+
+  expect(1).equals(1)
+
+})
+
+When("user enters card details and clicks submit", () => {
+
+  expect(1).equals(1)
+
+})
+
+Then("the success page is displayed", () => {
+
+  expect(1).equals(1)
+
 })

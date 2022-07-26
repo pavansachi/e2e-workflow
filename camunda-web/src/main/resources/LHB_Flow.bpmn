@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_10e7baw" targetNamespace="http://bpmn.io/schema/bpmn" exporter="Camunda Modeler" exporterVersion="5.1.0" modeler:executionPlatform="Camunda Platform" modeler:executionPlatformVersion="7.17.0">
+  <bpmn:process id="Process_0yutz1q" isExecutable="true">
+    <bpmn:task id="Activity_124j2h1" name="Marketo (Accept User email and Property details from user)">
+      <bpmn:outgoing>Flow_11ezczf</bpmn:outgoing>
+      <bpmn:outgoing>Flow_00ptxoq</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_0ptuvx1" name="Midas (Midas AC created as per Payment method captured">
+      <bpmn:incoming>Flow_0uaheyy</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_11ezczf" sourceRef="Activity_124j2h1" targetRef="Activity_16csrp3" />
+    <bpmn:task id="Activity_16csrp3" name="Salesforce (Lead, Opportunity creation and Registration status update)">
+      <bpmn:incoming>Flow_11ezczf</bpmn:incoming>
+      <bpmn:outgoing>Flow_06c6xqq</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0h24k9k</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:task id="Activity_121valc" name="DL (Provision property and User in NXS)">
+      <bpmn:incoming>Flow_06c6xqq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0h36ck2</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_06c6xqq" sourceRef="Activity_16csrp3" targetRef="Activity_121valc" />
+    <bpmn:task id="Activity_1jcf9kq" name="LHB Onboarding wizard (Accept general settings, Rooms and Rates, Booking Engine and Payment details from User)">
+      <bpmn:incoming>Flow_0u47yvr</bpmn:incoming>
+      <bpmn:outgoing>Flow_0uaheyy</bpmn:outgoing>
+      <bpmn:outgoing>Flow_0b6ga0r</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0uaheyy" sourceRef="Activity_1jcf9kq" targetRef="Activity_0ptuvx1" />
+    <bpmn:task id="Activity_1va8mnj" name="Authx (User is asked to enter Password)">
+      <bpmn:incoming>Flow_0h36ck2</bpmn:incoming>
+      <bpmn:incoming>Flow_00ptxoq</bpmn:incoming>
+      <bpmn:outgoing>Flow_0u47yvr</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0h36ck2" sourceRef="Activity_121valc" targetRef="Activity_1va8mnj" />
+    <bpmn:sequenceFlow id="Flow_0u47yvr" sourceRef="Activity_1va8mnj" targetRef="Activity_1jcf9kq" />
+    <bpmn:task id="Activity_0qm9lt3" name="LH (User ends on Front Desk page)">
+      <bpmn:incoming>Flow_0b6ga0r</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0b6ga0r" sourceRef="Activity_1jcf9kq" targetRef="Activity_0qm9lt3" />
+    <bpmn:task id="Activity_0vn1g8s" name="Zuora (AC created for Property)">
+      <bpmn:incoming>Flow_0h24k9k</bpmn:incoming>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="Flow_0h24k9k" sourceRef="Activity_16csrp3" targetRef="Activity_0vn1g8s" />
+    <bpmn:sequenceFlow id="Flow_00ptxoq" sourceRef="Activity_124j2h1" targetRef="Activity_1va8mnj" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Process_0yutz1q">
+      <bpmndi:BPMNEdge id="Flow_11ezczf_di" bpmnElement="Flow_11ezczf">
+        <di:waypoint x="260" y="430" />
+        <di:waypoint x="340" y="430" />
+        <di:waypoint x="340" y="300" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_06c6xqq_di" bpmnElement="Flow_06c6xqq">
+        <di:waypoint x="390" y="260" />
+        <di:waypoint x="470" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0uaheyy_di" bpmnElement="Flow_0uaheyy">
+        <di:waypoint x="710" y="390" />
+        <di:waypoint x="710" y="260" />
+        <di:waypoint x="870" y="260" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h36ck2_di" bpmnElement="Flow_0h36ck2">
+        <di:waypoint x="520" y="300" />
+        <di:waypoint x="520" y="390" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0u47yvr_di" bpmnElement="Flow_0u47yvr">
+        <di:waypoint x="570" y="430" />
+        <di:waypoint x="660" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0b6ga0r_di" bpmnElement="Flow_0b6ga0r">
+        <di:waypoint x="760" y="430" />
+        <di:waypoint x="870" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_0h24k9k_di" bpmnElement="Flow_0h24k9k">
+        <di:waypoint x="340" y="220" />
+        <di:waypoint x="340" y="160" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_00ptxoq_di" bpmnElement="Flow_00ptxoq">
+        <di:waypoint x="260" y="430" />
+        <di:waypoint x="470" y="430" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Activity_124j2h1_di" bpmnElement="Activity_124j2h1">
+        <dc:Bounds x="160" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_16csrp3_di" bpmnElement="Activity_16csrp3">
+        <dc:Bounds x="290" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0vn1g8s_di" bpmnElement="Activity_0vn1g8s">
+        <dc:Bounds x="290" y="80" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_121valc_di" bpmnElement="Activity_121valc">
+        <dc:Bounds x="470" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1va8mnj_di" bpmnElement="Activity_1va8mnj">
+        <dc:Bounds x="470" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_1jcf9kq_di" bpmnElement="Activity_1jcf9kq">
+        <dc:Bounds x="660" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0qm9lt3_di" bpmnElement="Activity_0qm9lt3">
+        <dc:Bounds x="870" y="390" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Activity_0ptuvx1_di" bpmnElement="Activity_0ptuvx1">
+        <dc:Bounds x="870" y="220" width="100" height="80" />
+        <bpmndi:BPMNLabel />
+      </bpmndi:BPMNShape>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

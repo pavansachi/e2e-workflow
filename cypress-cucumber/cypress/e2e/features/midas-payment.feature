@@ -3,15 +3,17 @@ Feature: Make a payment using credit card
     Test for making a payment
 
     Background:
-        Given the user visits billing.siteminder.com
-        | A00085433 | INV02816962 |
-        When the page loads
-        Then the invoice "A1" is shown on the page
-        And approval request is sent to @finance
-        When the user selects credit card
+        Given the user visits billing
+        |AccountNumber   | InvoiceNumber |
+        |A00085930       | DM00005839   |
+    Scenario: Success
+        And should display invoices "DM00005839"
+        When the user selects the invoice "DM00005839"
+        And selects update auto payment and credit card
         Then the hosted payment page is loaded
-        And approval request is sent to @finance
-        When the user fills the card details and clicks submit
-        | xxxxx | xxxxx |
+        When user enters card details and clicks submit
+        |cardNumber          | ExpMonth | ExpYear | CVC |
+        |2222 4000 7000 0005 | 03        | 2030   | 737 |
         Then the success page is displayed
-        And approval request is sent to @finance to verify the payment
+        |AccountNumber   | InvoiceNumber |
+        |A00085930       | DM00005839    |

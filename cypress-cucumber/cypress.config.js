@@ -27,10 +27,18 @@ module.exports = defineConfig({
       on("file:preprocessor", bundler);
       await addCucumberPreprocessorPlugin(on, config);
 
+      on('task', {
+        createReadStream(filename, encoding) {
+          console.log(fs.createReadStream(filename, { encoding }))
+          return null
+        },
+      })
+
       return config;
     },
     specPattern: "cypress/e2e/features/*.feature",
     baseUrl: "https://localhost:18000",
     chromeWebSecurity: false,
+    screenshotsFolder: "cypress/fixtures",
   },
 });

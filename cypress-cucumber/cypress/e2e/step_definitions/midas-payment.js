@@ -12,6 +12,35 @@ Cypress.on('uncaught:exception', (err, runnable) => {
   return false
 })
 
+// takes screenshot of page and uploads to imgbb. Returns the imageUrl
+const uploadImage = (filename) => {
+
+  cy.screenshot(filename)
+
+  cy.wait(2000)
+
+  return cy.fixture(`./${filename}.png`, { encoding: 'base64' }).then((encodedImage) => {
+
+    return cy.request({
+      url: 'https://api.imgbb.com/1/upload?expiration=600&key=c7dcec06849a461aa8a48a36273a58a2',
+      form: true,
+      body: {
+        image: encodedImage,
+      },
+      method: 'POST',
+    }).then((response) => {
+
+      // this is the image url
+      const { url: imageUrl } = response.body.data
+
+      return imageUrl
+
+    })
+
+  })
+
+}
+
 beforeEach(() => {
   cy.intercept('POST', '/api/graphql', (req) => {
     aliasQuery(req, 'getAccount')
@@ -117,6 +146,11 @@ Then("the hosted payment page is loaded", () => {
   // check if iframe is visible
   cy.get('#zuora_payment').should('be.visible')
 
+  // take screenshot of hosted payment page and upload image
+  uploadImage('loaded-hosted-payment-page').then((imageUrl) => {
+    console.log(imageUrl)
+  })
+
 })
 
 When("user enters card details and clicks submit", (dataTable) => {
@@ -144,6 +178,11 @@ When("user enters card details and clicks submit", (dataTable) => {
   getIframeBody().find('#input-email').type('email@test.com')
   getIframeBody().find('#creditcard-can-state').find('select').select('Alberta')
 
+  // take screenshot of entered details and upload image
+  uploadImage('filled-payment-page').then((imageUrl) => {
+    console.log(imageUrl)
+  })
+
   // click submit
   cy.get('.submit-payment').click({ force: true })
 
@@ -163,6 +202,11 @@ Then("the success page is displayed", (dataTable) => {
 
   // should be redirected to /success-payment
   cy.url({ timeout: 10000 }).should('contain', `/payment/${accountNumber}/${invoiceNumber}/success-payment`)
+
+  // take screenshot of success page and upload image
+  uploadImage('success-page').then((imageUrl) => {
+    console.log(imageUrl)
+  })
 
   cy.get('.card__title').first().contains('Payment successful!')
 

@@ -4,7 +4,7 @@ import {
   And,
   Then,
 } from "@badeball/cypress-cucumber-preprocessor";
-import { aliasQuery, getIframeBody } from '../../utils/graphql-test-utils'
+import { aliasQuery, aliasMutation, getIframeBody } from '../../utils/graphql-test-utils'
 
 // after payment, there is an uncaught expection that occurs during redirection to success page due to navigation guard
 // suppressing it here
@@ -18,6 +18,7 @@ beforeEach(() => {
     aliasQuery(req, 'getHostedPaymentPages')
     aliasQuery(req, 'getBillingDocuments')
     aliasQuery(req, 'getRSA')
+    aliasMutation(req, 'CreatePayment')
   })
 })
 
@@ -145,6 +146,11 @@ When("user enters card details and clicks submit", (dataTable) => {
 
   // click submit
   cy.get('.submit-payment').click({ force: true })
+
+  cy.wait('@gqlCreatePaymentMutation', { timeout: 30000 }).then((interception) => {
+    assert.isNotNull(interception.response.body, 'getAccount response is not null')
+    //send camunda message for getAccount
+  })
 
 })
 

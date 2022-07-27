@@ -148,7 +148,7 @@ When("user enters card details and clicks submit", (dataTable) => {
   cy.get('.submit-payment').click({ force: true })
 
   cy.wait('@gqlCreatePaymentMutation', { timeout: 30000 }).then((interception) => {
-    assert.isNotNull(interception.response.body, 'getAccount response is not null')
+    assert.isNotNull(interception.response.body, 'CreatePayment response is not null')
     //send camunda message for getAccount
   })
 
